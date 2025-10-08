@@ -11,4 +11,4 @@
     <link rel="stylesheet" href="public/Assets/css/styles.css">
 
 </head>
-<body>
+<body class="flex flex-row h-screen">
