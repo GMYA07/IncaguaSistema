@@ -26,6 +26,18 @@ switch($pagina) {
         $controller = new DocenteController();
         $controller->inicioDocente();
         break;
+    
+    case 'inicioAdministrador':
+        require_once 'controllers/AdministradorController.php';
+        $controller = new AdministradorController();
+        $controller->inicioAdministrador();
+        break;
+    
+    case 'logout':
+        require_once 'controllers/HomeController.php';
+        $controller = new HomeController();
+        $controller->logout();
+        break;
 
     default:
         echo "Página no encontrada";

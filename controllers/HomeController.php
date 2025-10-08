@@ -27,11 +27,20 @@ class HomeController {
                 // Redireccionar al dashboard
                 header('Location: ' . BASE_URL . '?pagina=inicioDocente');
                 exit();
-            } else {
+                
+            }if ($usuario == 'admin' && $password == 'admin123') {
+                $_SESSION['usuario'] = $usuario;
+                $_SESSION['rol'] = 'administrador';
+                
+                // Redireccionar al dashboard
+                header('Location: ' . BASE_URL . '?pagina=inicioAdministrador');
+                exit();
+            }else {
                 // Volver al login con error
                 header('Location: ' . BASE_URL . '?pagina=login&error=1');
                 exit();
             }
+
         } else {
             // Si acceden directo por GET, mostrar el login
             header('Location: ' . BASE_URL . '?pagina=login');
