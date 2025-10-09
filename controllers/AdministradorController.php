@@ -4,7 +4,7 @@
         // Verificar que esté logueado (lo usamos en todos los métodos)
         private function verificarSesion()
         {
-            if (!isset($_SESSION['usuario']) || $_SESSION['rol'] != 'administrador') {
+            if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 'Administrador') {
                 header('Location: ' . BASE_URL . '?pagina=login');
                 exit();
             }
@@ -16,7 +16,7 @@
             $this->verificarSesion();
 
             $titulo = 'Inicio Administrador';
-            $usuario = $_SESSION['usuario'];
+            $usuario = $_SESSION['nombre_usuario'];
 
             require_once 'views/administrador/inicioAdministrador.php';
         }

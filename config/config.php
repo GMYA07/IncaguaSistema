@@ -4,7 +4,7 @@ define('BASE_URL', 'http://localhost/IncaguaSistema/');
 
 // Configuración de base de datos
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'sistema_escolar');
+define('DB_NAME', 'sistema_incagua');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
