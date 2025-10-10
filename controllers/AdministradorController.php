@@ -20,5 +20,20 @@
 
             require_once 'views/administrador/inicioAdministrador.php';
         }
+
+        public function listarAlumno(){
+
+            $this->verificarSesion();
+
+            $titulo = 'Alumnos';
+            require_once 'views/administrador/crudAlumnos.php';
+        }
+
+        public function listarDocentes(){
+            $this->verificarSesion();
+
+            $titulo = 'Docentes';
+            require_once 'views/administrador/crudDocentes.php';
+        }
     }
 ?>

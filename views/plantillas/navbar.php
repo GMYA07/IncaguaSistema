@@ -8,8 +8,14 @@
 
         <div class="flex flex-col gap-3 w-full">
 
-
-            <a href="<?php echo BASE_URL; ?>?pagina=inicioDocente"
+            <?php
+                if ($_SESSION['rol'] === "Administrador") {
+                    $paginaRedireccion = "inicioAdministrador";
+                }else{
+                    $paginaRedireccion = "inicioDocente";
+                }
+            ?>
+            <a href="<?php echo BASE_URL; ?>?pagina=<?=$paginaRedireccion?>"
                 class="group relative text-white px-6 py-4 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center gap-3 overflow-hidden">
                 <span class="absolute left-0 top-0 h-full w-1 bg-white scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"></span>
                 <svg class="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -27,6 +33,18 @@
                 </svg>
                 <span class="font-medium group-hover:translate-x-1 transition-transform duration-300">Alumnos</span>
             </a>
+
+            <!-- Docentes -->
+            <?php if ($_SESSION['rol'] === "Administrador"): ?>
+            <a href="<?php echo BASE_URL; ?>?pagina=listarDocentes"
+                class="group relative text-white px-6 py-4 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center gap-3 overflow-hidden">
+                <span class="absolute left-0 top-0 h-full w-1 bg-white scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"></span>
+                <svg class="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                <span class="font-medium group-hover:translate-x-1 transition-transform duration-300">Docentes</span>
+            </a>
+            <?php endif; ?>
 
             <!-- Registrar Demeritos -->
             <a href="<?php echo BASE_URL; ?>?pagina=registrarDemeritos"
