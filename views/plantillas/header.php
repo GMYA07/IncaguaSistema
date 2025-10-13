@@ -11,23 +11,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Nuestros Css -->
     <link rel="stylesheet" href="public/Assets/css/styles.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#8B1A1A',
-                        secondary: '#5c1010',
-                        accent: '#3498db',
-                        success: '#27ae60',
-                        danger: '#e74c3c',
-                        warning: '#f39c12',
-                    }
-                }
-            }
+    <style type="text/tailwindcss">
+        @theme {
+            --color-primary: #8B1A1A;
+            --color-secondary: #5c1010;
+            --color-accent: #3498db;
+            --color-success: #27ae60;
+            --color-danger: #e74c3c;
+            --color-warning: #f39c12;
         }
-    </script>
-
-
+    </style>
 </head>
 <body class="m-0 p-0">
