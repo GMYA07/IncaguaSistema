@@ -2,12 +2,5 @@
 
 
 # Ignorar toda la carpeta de configuración
-/config/
-
-vendor/
-composer.lock
-/.vscode/
-.DS_Store
-Thumbs.db
 
 
