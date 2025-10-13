@@ -5,7 +5,7 @@ class DocenteController
     // Verificar que esté logueado (lo usamos en todos los métodos)
     private function verificarSesion()
     {
-        if (!isset($_SESSION['usuario']) || $_SESSION['rol'] != 'docente') {
+        if (!isset($_SESSION['nombre_usuario']) || $_SESSION['rol'] != 'Docente') {
             header('Location: ' . BASE_URL . '?pagina=login');
             exit();
         }
@@ -17,7 +17,7 @@ class DocenteController
         $this->verificarSesion();
 
         $titulo = 'Inicio Docente';
-        $usuario = $_SESSION['usuario'];
+        $usuario = $_SESSION['nombre_usuario'];
 
         require_once 'views/docente/inicioDocente.php';
     }
@@ -48,6 +48,14 @@ class DocenteController
 
         require_once 'views/docente/demeritos.php';
     }
+
+
+    public function listarDemeritos(){
+            $this->verificarSesion();
+
+            $titulo = 'Lista de Demeritos';
+            require_once 'views/docente/crudDemeritos.php';
+        }
 }
 
 ?>

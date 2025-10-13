@@ -49,6 +49,12 @@ switch($pagina) {
         $controller = new AdministradorController();
         $controller->listarDocentes();
         break;
+    
+    case 'listarDemeritos_Docente':
+        require_once 'controllers/DocenteController.php';
+        $controller = new DocenteController();
+        $controller->listarDemeritos();
+        break;
 
     default:
         echo "Página no encontrada";

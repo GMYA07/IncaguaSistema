@@ -6,7 +6,7 @@ class HomeController
     public function mostrarLogin()
     {
         // Si ya está logueado, redirigir al dashboard
-        if (isset($_SESSION['usuario'])) {
+        if (isset($_SESSION['nombre_usuario'])) {
             header('Location: ' . BASE_URL . '?pagina=inicioDocente');
             exit();
         }

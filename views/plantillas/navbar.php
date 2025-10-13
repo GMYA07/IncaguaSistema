@@ -47,7 +47,7 @@
             <?php endif; ?>
 
             <!-- Registrar Demeritos -->
-            <a href="<?php echo BASE_URL; ?>?pagina=registrarDemeritos"
+            <a href="<?php echo BASE_URL; ?>?pagina=listarDemeritos_Docente"
                 class="group relative text-white px-6 py-4 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center gap-3 overflow-hidden">
                 <span class="absolute left-0 top-0 h-full w-1 bg-white scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"></span>
                 <svg class="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
