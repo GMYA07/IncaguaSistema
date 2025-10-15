@@ -46,6 +46,7 @@
             </a>
             <?php endif; ?>
 
+            <?php if ($_SESSION['rol'] === "Administrador"): ?>
             <!-- Registrar Demeritos -->
             <a href="<?php echo BASE_URL; ?>?pagina=listarDemeritos_Docente"
                 class="group relative text-white px-6 py-4 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center gap-3 overflow-hidden">
@@ -55,6 +56,7 @@
                 </svg>
                 <span class="font-medium group-hover:translate-x-1 transition-transform duration-300">Registrar Demeritos</span>
             </a>
+            <?php endif; ?>
         </div>
 
         <!-- Cerrar Sesión (al final) -->
