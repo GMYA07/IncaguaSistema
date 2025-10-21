@@ -427,6 +427,7 @@ require_once 'views/plantillas/navbar.php'; ?>
     </div>
 
     <script>
+        
         // Función para el acordeón móvil
         function toggleAccordion(id) {
             const accordion = document.getElementById(id);
