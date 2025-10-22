@@ -1,39 +1,78 @@
 <?php
-    Class AdministradorController
+require_once 'models/UsuarioModelo.php';
+
+class AdministradorController
+{
+    private $tablaUsuario = 'Usuario';
+    private $tablaLogueo = 'Loggeo';
+    private $modeloUsuario;
+
+    public function __construct()
     {
-        // Verificar que esté logueado (lo usamos en todos los métodos)
-        private function verificarSesion()
-        {
-            if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 'Administrador') {
-                header('Location: ' . BASE_URL . '?pagina=login');
-                exit();
-            }
-        }
+        $this->modeloUsuario = new UsuarioModelo();
+    }
 
-        // Mostrar dashboard
-        public function inicioAdministrador()
-        {
-            $this->verificarSesion();
-
-            $titulo = 'Inicio Administrador';
-            $usuario = $_SESSION['nombre_usuario'];
-
-            require_once 'views/administrador/inicioAdministrador.php';
-        }
-
-        public function listarAlumno(){
-
-            $this->verificarSesion();
-
-            $titulo = 'Alumnos';
-            require_once 'views/administrador/crudAlumnos.php';
-        }
-
-        public function listarDocentes(){
-            $this->verificarSesion();
-
-            $titulo = 'Docentes';
-            require_once 'views/administrador/crudDocentes.php';
+    // Verificar que esté logueado (lo usamos en todos los métodos)
+    private function verificarSesion()
+    {
+        if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 'Administrador') {
+            header('Location: ' . BASE_URL . '?pagina=login');
+            exit();
         }
     }
-?>
+
+    // Mostrar dashboard
+    public function inicioAdministrador()
+    {
+        $this->verificarSesion();
+
+        $titulo = 'Inicio Administrador';
+        $usuario = $_SESSION['nombre_usuario'];
+
+        require_once 'views/administrador/inicioAdministrador.php';
+    }
+
+    public function agregarDocente($dataDocente)
+    {
+        $this->verificarSesion();
+
+        $titulo = 'Docentes';
+
+        $msg = $this->modeloUsuario->agregarUsuario($dataDocente) ? 'agregado' : 'error';
+
+        // Redirect a listar docentes con el mensaje
+        header('Location: ' . BASE_URL . '?pagina=listarDocentes&msg=' . $msg);
+        exit();
+    }
+
+    public function eliminarDocente($idDocente)
+    {
+
+        $this->verificarSesion();
+        $titulo = 'Docentes';
+        $msg = $this->modeloUsuario->cambiarEstadoUsuario($idDocente, 0) ? 'eliminado' : 'error';
+
+        // Redirect a listar docentes con el mensaje
+        header('Location: ' . BASE_URL . '?pagina=listarDocentes&msg=' . $msg);
+        exit();
+    }
+
+    public function listarAlumno()
+    {
+
+        $this->verificarSesion();
+
+        $titulo = 'Alumnos';
+        require_once 'views/administrador/crudAlumnos.php';
+    }
+
+    public function listarDocentes()
+    {
+        $this->verificarSesion();
+
+        $titulo = 'Docentes';
+        $docentes  = $this->modeloUsuario->obtenerUsuariosDocentes();
+
+        require_once 'views/administrador/crudDocentes.php';
+    }
+}

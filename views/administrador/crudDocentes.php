@@ -2,6 +2,7 @@
 require_once 'views/plantillas/header.php';
 require_once 'views/plantillas/navbar.php'; ?>
 
+
 <section class="p-15">
     <!-- Buscador -->
     <div class="flex mb-4 gap-2">
@@ -22,144 +23,70 @@ require_once 'views/plantillas/navbar.php'; ?>
             <div class="lg:block hidden overflow-auto h-[550px] p-6">
                 <div id="docentesList">
                     <!-- Docente 1 -->
-                    <div class="bg-white rounded-lg p-6 mb-4 shadow-md hover:shadow-xl transition-all duration-300 hover:translate-x-2 border-l-4 border-accent">
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                            <div class="md:col-span-3">
-                                <h6 class="font-bold text-gray-800 mb-1">Carlos Pérez García</h6>
-                                <small class="text-gray-500"><i class="fas fa-id-card mr-1"></i>NIE: 12345678-9</small>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <small class="text-gray-500 block mb-1">Sección:</small>
-                                <strong class="text-gray-800">A</strong>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <small class="text-gray-500 block mb-1">Usuario:</small>
-                                <strong class="text-gray-800">c.perez</strong>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <span class="inline-block px-4 py-2 bg-blue-500 text-white rounded-full font-semibold text-sm">
-                                    <i class="fas fa-chalkboard-teacher mr-1"></i>Docente
-                                </span>
-                            </div>
-                            <div class="md:col-span-3 text-center md:text-right">
-                                <div class="flex gap-2 justify-end">
-                                    <button onclick="openEditForm({id:1, nombre:'Carlos', apellidos:'Pérez García', nie:'12345678-9', seccion:'A', usuario:'c.perez', contrasena:'', rol:'docente'})"
-                                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
-                                        <i class="fas fa-edit mr-1"></i>Editar
-                                    </button>
-                                    <button onclick="openDeleteForm(1)"
-                                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
-                                        <i class="fas fa-trash-alt mr-1"></i>Eliminar
-                                    </button>
-                                </div>
-                            </div>
+                    <?php if (empty($docentes)): ?>
+                        <div class="text-center py-8">
+                            <p class="text-gray-500">No hay docentes registrados</p>
                         </div>
-                    </div>
+                    <?php else: ?>
+                        <?php foreach ($docentes as $docente): ?>
+                            <div class="bg-white rounded-lg p-6 mb-4 shadow-md hover:shadow-xl transition-all duration-300 hover:translate-x-2 border-l-4 border-accent">
+                                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                                    <!-- Nombre y NIE -->
+                                    <div class="md:col-span-3">
+                                        <h6 class="font-bold text-gray-800 mb-1">
+                                            <?php echo htmlspecialchars($docente['nombre_usuario'] . ' ' . $docente['apellido_usuario']); ?>
+                                        </h6>
+                                        <small class="text-gray-500">
+                                            <i class="fas fa-id-card mr-1"></i>NIE: <?php echo htmlspecialchars($docente['nie_usuario']); ?>
+                                        </small>
+                                    </div>
 
-                    <!-- Docente 2 -->
-                    <div class="bg-white rounded-lg p-6 mb-4 shadow-md hover:shadow-xl transition-all duration-300 hover:translate-x-2 border-l-4 border-accent">
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                            <div class="md:col-span-3">
-                                <h6 class="font-bold text-gray-800 mb-1">María López Hernández</h6>
-                                <small class="text-gray-500"><i class="fas fa-id-card mr-1"></i>NIE: 98765432-1</small>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <small class="text-gray-500 block mb-1">Sección:</small>
-                                <strong class="text-gray-800">B</strong>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <small class="text-gray-500 block mb-1">Usuario:</small>
-                                <strong class="text-gray-800">m.lopez</strong>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <span class="inline-block px-4 py-2 bg-purple-600 text-white rounded-full font-semibold text-sm">
-                                    <i class="fas fa-crown mr-1"></i>Admin
-                                </span>
-                            </div>
-                            <div class="md:col-span-3 text-center md:text-right">
-                                <div class="flex gap-2 justify-end">
-                                    <button onclick="openForm('editar', {id:2, nombre:'María', apellidos:'López Hernández', nie:'98765432-1', seccion:'B', usuario:'m.lopez', contrasena:'', rol:'admin'})"
-                                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
-                                        <i class="fas fa-edit mr-1"></i>Editar
-                                    </button>
-                                    <button onclick="openDeleteForm(2)"
-                                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
-                                        <i class="fas fa-trash-alt mr-1"></i>Eliminar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                    <!-- Sección (si la tienes en la BD) -->
+                                    <div class="md:col-span-2 text-center">
+                                        <small class="text-gray-500 block mb-1">Sección:</small>
+                                        <strong class="text-gray-800"><?php echo htmlspecialchars($docente['seccion'] ?? 'N/A'); ?></strong>
+                                    </div>
 
-                    <!-- Docente 3 -->
-                    <div class="bg-white rounded-lg p-6 mb-4 shadow-md hover:shadow-xl transition-all duration-300 hover:translate-x-2 border-l-4 border-accent">
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                            <div class="md:col-span-3">
-                                <h6 class="font-bold text-gray-800 mb-1">José Martínez Ruiz</h6>
-                                <small class="text-gray-500"><i class="fas fa-id-card mr-1"></i>NIE: 11223344-5</small>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <small class="text-gray-500 block mb-1">Sección:</small>
-                                <strong class="text-gray-800">C</strong>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <small class="text-gray-500 block mb-1">Usuario:</small>
-                                <strong class="text-gray-800">j.martinez</strong>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <span class="inline-block px-4 py-2 bg-blue-500 text-white rounded-full font-semibold text-sm">
-                                    <i class="fas fa-chalkboard-teacher mr-1"></i>Docente
-                                </span>
-                            </div>
-                            <div class="md:col-span-3 text-center md:text-right">
-                                <div class="flex gap-2 justify-end">
-                                    <button onclick="openEditForm({id:3, nombre:'José', apellidos:'Martínez Ruiz', nie:'11223344-5', seccion:'C', usuario:'j.martinez', contrasena:'', rol:'docente'})"
-                                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
-                                        <i class="fas fa-edit mr-1"></i>Editar
-                                    </button>
-                                    <button onclick="openDeleteForm({id:3})"
-                                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
-                                        <i class="fas fa-trash-alt mr-1"></i>Eliminar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                    <!-- Usuario -->
+                                    <div class="md:col-span-2 text-center">
+                                        <small class="text-gray-500 block mb-1">Usuario:</small>
+                                        <strong class="text-gray-800"><?php echo htmlspecialchars($docente['user']); ?></strong>
+                                    </div>
 
-                    <!-- Docente 4 -->
-                    <div class="bg-white rounded-lg p-6 mb-4 shadow-md hover:shadow-xl transition-all duration-300 hover:translate-x-2 border-l-4 border-accent">
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                            <div class="md:col-span-3">
-                                <h6 class="font-bold text-gray-800 mb-1">Ana Sofía Ramírez</h6>
-                                <small class="text-gray-500"><i class="fas fa-id-card mr-1"></i>NIE: 55667788-9</small>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <small class="text-gray-500 block mb-1">Sección:</small>
-                                <strong class="text-gray-800">A</strong>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <small class="text-gray-500 block mb-1">Usuario:</small>
-                                <strong class="text-gray-800">a.ramirez</strong>
-                            </div>
-                            <div class="md:col-span-2 text-center">
-                                <span class="inline-block px-4 py-2 bg-purple-600 text-white rounded-full font-semibold text-sm">
-                                    <i class="fas fa-crown mr-1"></i>Admin
-                                </span>
-                            </div>
-                            <div class="md:col-span-3 text-center md:text-right">
-                                <div class="flex gap-2 justify-end">
-                                    <button onclick="openEditForm({id:4, nombre:'Ana Sofía', apellidos:'Ramírez', nie:'55667788-9', seccion:'A', usuario:'a.ramirez', contrasena:'', rol:'admin'})"
-                                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
-                                        <i class="fas fa-edit mr-1"></i>Editar
-                                    </button>
-                                    <button onclick="openDeleteForm({id:4, nombre:'Ana Sofía Ramírez'})"
-                                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
-                                        <i class="fas fa-trash-alt mr-1"></i>Eliminar
-                                    </button>
+                                    <!-- Rol -->
+                                    <div class="md:col-span-2 text-center">
+                                        <span class="inline-block px-4 py-2 bg-blue-500 text-white rounded-full font-semibold text-sm">
+                                            <i class="fas fa-chalkboard-teacher mr-1"></i><?php echo htmlspecialchars($docente['rol']); ?>
+                                        </span>
+                                    </div>
+
+                                    <!-- Botones -->
+                                    <div class="md:col-span-3 text-center md:text-right">
+                                        <div class="flex gap-2 justify-end">
+                                            <button
+                                                data-docente='<?php echo json_encode([
+                                                                    "id" => $docente["id_usuario"],
+                                                                    "nombre" => $docente["nombre_usuario"],
+                                                                    "apellidos" => $docente["apellido_usuario"],
+                                                                    "nie" => $docente["nie_usuario"],
+                                                                    "seccion" => $docente["seccion"] ?? "A",
+                                                                    "usuario" => $docente["user"],
+                                                                    "rol" => $docente["rol"]
+                                                                ]); ?>'
+                                                onclick="openEditForm(JSON.parse(this.dataset.docente))"
+                                                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
+                                                <i class="fas fa-edit mr-1"></i>Editar
+                                            </button>
+                                            <button onclick="openDeleteForm(<?php echo $docente['id_usuario']; ?>)"
+                                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
+                                                <i class="fas fa-trash-alt mr-1"></i>Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
 
                 <div id="noResults" class="hidden text-center py-12 text-gray-500">
@@ -171,148 +98,74 @@ require_once 'views/plantillas/navbar.php'; ?>
 
         <!-- Vista móvil - Acordeón -->
         <div class="block lg:hidden space-y-3 overflow-auto h-[550px] mt-6">
-
-            <!-- Card ejemplo 1 -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition border-l-4 border-accent"
-                    onclick="toggleAccordion('accordion1')">
-                    <div class="flex-1">
-                        <h3 class="font-semibold text-lg">Carlos Pérez García</h3>
-                        <p class="text-sm text-gray-600">NIE: 12345678-9 | Sección: A</p>
-                        <span class="inline-block mt-1 px-2 py-1 text-xs bg-green-100 text-green-700 rounded">Activo</span>
-                    </div>
-                    <svg id="icon1" class="w-6 h-6 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
+            <?php if (empty($docentes)): ?>
+                <div class="text-center py-8">
+                    <p class="text-gray-500">No hay docentes registrados</p>
                 </div>
-
-                <div id="accordion1" class="hidden border-t border-gray-200">
-                    <div class="p-4 bg-gray-50">
-                        <div class="space-y-2 text-sm">
-                            <p><span class="font-semibold">Nombre:</span> Carlos</p>
-                            <p><span class="font-semibold">Apellidos:</span> Pérez García</p>
-                            <p><span class="font-semibold">NIE:</span> 12345678-9</p>
-                            <p><span class="font-semibold">Sección:</span> A</p>
-                            <p><span class="font-semibold">Usuario:</span> c.perez</p>
-                            <p><span class="font-semibold">Rol:</span> <span class="text-blue-600">👨‍🏫 Docente</span></p>
+            <?php else: ?>
+                <?php foreach ($docentes as $index => $docente): ?>
+                    <!-- Card docente -->
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition border-l-4 border-accent"
+                            onclick="toggleAccordion('accordion<?php echo $index; ?>')">
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-lg">
+                                    <?php echo htmlspecialchars($docente['nombre_usuario'] . ' ' . $docente['apellido_usuario']); ?>
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    NIE: <?php echo htmlspecialchars($docente['nie_usuario']); ?> |
+                                    Sección: <?php echo htmlspecialchars($docente['seccion'] ?? 'N/A'); ?>
+                                </p>
+                                <span class="inline-block mt-1 px-2 py-1 text-xs <?php echo $docente['estado_usuario'] == 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'; ?> rounded">
+                                    <?php echo $docente['estado_usuario'] == 1 ? 'Activo' : 'Inactivo'; ?>
+                                </span>
+                            </div>
+                            <svg id="icon<?php echo $index; ?>" class="w-6 h-6 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
                         </div>
-                        <div class="flex gap-2 mt-4">
-                            <button onclick="openEditForm({id:1, nombre:'Carlos', apellidos:'Pérez García', nie:'12345678-9', seccion:'A', usuario:'c.perez', contrasena:'', rol:'docente'})"
-                                class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm cursor-pointer">Editar</button>
-                            <button onclick="openDeleteForm({id:1, nombre:'Carlos Pérez García'})"
-                                class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm cursor-pointer">Eliminar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Card ejemplo 2 -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition border-l-4 border-accent"
-                    onclick="toggleAccordion('accordion2')">
-                    <div class="flex-1">
-                        <h3 class="font-semibold text-lg">María López Hernández</h3>
-                        <p class="text-sm text-gray-600">NIE: 98765432-1 | Sección: B</p>
-                        <span class="inline-block mt-1 px-2 py-1 text-xs bg-green-100 text-green-700 rounded">Activo</span>
-                    </div>
-                    <svg id="icon2" class="w-6 h-6 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </div>
-
-                <div id="accordion2" class="hidden border-t border-gray-200">
-                    <div class="p-4 bg-gray-50">
-                        <div class="space-y-2 text-sm">
-                            <p><span class="font-semibold">Nombre:</span> María</p>
-                            <p><span class="font-semibold">Apellidos:</span> López Hernández</p>
-                            <p><span class="font-semibold">NIE:</span> 98765432-1</p>
-                            <p><span class="font-semibold">Sección:</span> B</p>
-                            <p><span class="font-semibold">Usuario:</span> m.lopez</p>
-                            <p><span class="font-semibold">Rol:</span> <span class="text-purple-600">👑 Administrador</span></p>
-                        </div>
-                        <div class="flex gap-2 mt-4">
-                            <button onclick="openEditForm({id:2, nombre:'María', apellidos:'López Hernández', nie:'98765432-1', seccion:'B', usuario:'m.lopez', contrasena:'', rol:'admin'})"
-                                class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm cursor-pointer">Editar</button>
-                            <button onclick="openDeleteForm({id:2, nombre:'María López Hernández'})"
-                                class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm cursor-pointer">Eliminar</button>
+                        <div id="accordion<?php echo $index; ?>" class="hidden border-t border-gray-200">
+                            <div class="p-4 bg-gray-50">
+                                <div class="space-y-2 text-sm">
+                                    <p><span class="font-semibold">Nombre:</span> <?php echo htmlspecialchars($docente['nombre_usuario']); ?></p>
+                                    <p><span class="font-semibold">Apellidos:</span> <?php echo htmlspecialchars($docente['apellido_usuario']); ?></p>
+                                    <p><span class="font-semibold">NIE:</span> <?php echo htmlspecialchars($docente['nie_usuario']); ?></p>
+                                    <p><span class="font-semibold">Sección:</span> <?php echo htmlspecialchars($docente['seccion'] ?? 'N/A'); ?></p>
+                                    <p><span class="font-semibold">Usuario:</span> <?php echo htmlspecialchars($docente['user']); ?></p>
+                                    <p><span class="font-semibold">Rol:</span> <span class="text-blue-600"><?php echo htmlspecialchars($docente['rol']); ?></span></p>
+                                </div>
+                                <div class="flex gap-2 mt-4">
+                                    <button
+                                        data-docente='<?php echo json_encode([
+                                                            "id" => $docente["id_usuario"],
+                                                            "nombre" => $docente["nombre_usuario"],
+                                                            "apellidos" => $docente["apellido_usuario"],
+                                                            "nie" => $docente["nie_usuario"],
+                                                            "seccion" => $docente["seccion"] ?? "A",
+                                                            "usuario" => $docente["user"],
+                                                            "rol" => $docente["rol"]
+                                                        ]); ?>'
+                                        onclick="openEditForm(JSON.parse(this.dataset.docente))"
+                                        class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm cursor-pointer">
+                                        Editar
+                                    </button>
+                                    <button
+                                        onclick="openDeleteForm(<?php echo $docente['id_usuario']; ?>)"
+                                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm cursor-pointer">
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Card ejemplo 3 -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition border-l-4 border-accent"
-                    onclick="toggleAccordion('accordion3')">
-                    <div class="flex-1">
-                        <h3 class="font-semibold text-lg">José Martínez Ruiz</h3>
-                        <p class="text-sm text-gray-600">NIE: 11223344-5 | Sección: C</p>
-                        <span class="inline-block mt-1 px-2 py-1 text-xs bg-red-100 text-red-700 rounded">Inactivo</span>
-                    </div>
-                    <svg id="icon3" class="w-6 h-6 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </div>
-
-                <div id="accordion3" class="hidden border-t border-gray-200">
-                    <div class="p-4 bg-gray-50">
-                        <div class="space-y-2 text-sm">
-                            <p><span class="font-semibold">Nombre:</span> José</p>
-                            <p><span class="font-semibold">Apellidos:</span> Martínez Ruiz</p>
-                            <p><span class="font-semibold">NIE:</span> 11223344-5</p>
-                            <p><span class="font-semibold">Sección:</span> C</p>
-                            <p><span class="font-semibold">Usuario:</span> j.martinez</p>
-                            <p><span class="font-semibold">Rol:</span> <span class="text-blue-600">👨‍🏫 Docente</span></p>
-                        </div>
-                        <div class="flex gap-2 mt-4">
-                            <button onclick="openEditForm({id:3, nombre:'José', apellidos:'Martínez Ruiz', nie:'11223344-5', seccion:'C', usuario:'j.martinez', contrasena:'', rol:'docente'})"
-                                class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm cursor-pointer">Editar</button>
-                            <button onclick="openDeleteForm({id:3, nombre:'José Martínez Ruiz'})"
-                                class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm cursor-pointer">Eliminar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card ejemplo 4 -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition border-l-4 border-accent"
-                    onclick="toggleAccordion('accordion4')">
-                    <div class="flex-1">
-                        <h3 class="font-semibold text-lg">Ana Sofía Ramírez</h3>
-                        <p class="text-sm text-gray-600">NIE: 55667788-9 | Sección: A</p>
-                        <span class="inline-block mt-1 px-2 py-1 text-xs bg-green-100 text-green-700 rounded">Activo</span>
-                    </div>
-                    <svg id="icon4" class="w-6 h-6 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </div>
-
-                <div id="accordion4" class="hidden border-t border-gray-200">
-                    <div class="p-4 bg-gray-50">
-                        <div class="space-y-2 text-sm">
-                            <p><span class="font-semibold">Nombre:</span> Ana Sofía</p>
-                            <p><span class="font-semibold">Apellidos:</span> Ramírez</p>
-                            <p><span class="font-semibold">NIE:</span> 55667788-9</p>
-                            <p><span class="font-semibold">Sección:</span> A</p>
-                            <p><span class="font-semibold">Usuario:</span> a.ramirez</p>
-                            <p><span class="font-semibold">Rol:</span> <span class="text-purple-600">👑 Administrador</span></p>
-                        </div>
-                        <div class="flex gap-2 mt-4">
-                            <button onclick="openEditForm({id:4, nombre:'Ana Sofía', apellidos:'Ramírez', nie:'55667788-9', seccion:'A', usuario:'a.ramirez', contrasena:'', rol:'admin'})"
-                                class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm cursor-pointer">Editar</button>
-                            <button onclick="openDeleteForm({id:4, nombre:'Ana Sofía Ramírez'})"
-                                class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm cursor-pointer">Eliminar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </section>
 
     <section>
-        <form id="formModal" class="hidden fixed inset-0 bg-opacity-60 flex items-center justify-center z-50 p-4">
+        <div id="formModal" class="hidden fixed inset-0 bg-opacity-60 flex items-center justify-center z-50 p-4" method="POST">
             <div id="formContainer" class="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[100vh] relative overflow-hidden animate-fadeIn flex flex-col">
 
                 <!-- Header con decoración -->
@@ -343,9 +196,8 @@ require_once 'views/plantillas/navbar.php'; ?>
 
                 <div class="bg-white rounded-lg shadow-md p-8 overflow-y-auto flex-1">
                     <!-- Formulario -->
-                    <form id="docenteForm" method="POST" action="controllers/docentesController.php" class="space-y-6">
+                    <form id="docenteForm" action="<?php echo BASE_URL; ?>?pagina=agregarDocente" method="POST" class="space-y-6">
                         <input type="hidden" name="id_docente" id="id_docente">
-                        <input type="hidden" name="accion" id="accion" value="añadir">
 
                         <!-- Nombre -->
                         <div class="space-y-2">
@@ -416,9 +268,24 @@ require_once 'views/plantillas/navbar.php'; ?>
                                         Sección
                                     </span>
                                 </label>
-                                <input type="text" name="seccion" id="seccion" required placeholder="A, B, C..."
-                                    class="w-full px-4 py-3 text-center bg-gray-50 border-2 border-gray-200 
-                rounded-xl focus:border-[#8B2F2F] focus:bg-white focus:outline-none transition-all duration-200 font-semibold">
+                                <div class="relative">
+                                    <select name="seccion" id="seccion" required
+                                        class="w-full px-4 py-3 pl-10 bg-gradient-to-r from-gray-50 to-gray-100 border-2 
+                border-gray-200 rounded-xl focus:border-[#8B2F2F] focus:bg-white focus:outline-none appearance-none cursor-pointer font-medium transition-all duration-200">
+                                        <option value="A" selected>A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                    </select>
+                                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3.5 pointer-events-none" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                    <svg class="w-5 h-5 text-[#8B2F2F] absolute right-3 top-3.5 pointer-events-none" fill="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path d="M7 10l5 5 5-5z" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
 
@@ -480,8 +347,8 @@ require_once 'views/plantillas/navbar.php'; ?>
                                 <select name="rol" id="rol" required
                                     class="w-full px-4 py-3 pl-10 bg-gradient-to-r from-gray-50 to-gray-100 border-2 
                 border-gray-200 rounded-xl focus:border-[#8B2F2F] focus:bg-white focus:outline-none appearance-none cursor-pointer font-medium transition-all duration-200">
-                                    <option value="docente">👨‍🏫 Docente</option>
-                                    <option value="admin">👑 Administrador</option>
+                                    <option value="Docente">👨‍🏫 Docente</option>
+                                    <option value="Administrador">👑 Administrador</option>
                                 </select>
                                 <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3.5 pointer-events-none" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -524,7 +391,7 @@ require_once 'views/plantillas/navbar.php'; ?>
                 <!-- Barra decorativa inferior -->
                 <div class="h-2 bg-gradient-to-r from-[#8B2F2F] via-[#A63F3F] to-[#8B2F2F]"></div>
             </div>
-        </form>
+        </div>
 
 
         <!-- MODAL DE ELIMINACIÓN -->
@@ -551,7 +418,7 @@ require_once 'views/plantillas/navbar.php'; ?>
                 </div>
 
                 <!-- Formulario de eliminación -->
-                <form id="deleteForm" method="POST" action="controllers/alumnosController.php">
+                <form id="deleteForm" method="POST" action="<?php echo BASE_URL; ?>?pagina=eliminarDocente">
                     <input type="hidden" name="accion" value="eliminar">
                     <input type="hidden" name="id_docente" id="delete_id_docente">
 
@@ -576,6 +443,12 @@ require_once 'views/plantillas/navbar.php'; ?>
             </div>
         </div>
     </section>
+
+    <?php if (isset($msg)): ?>
+        <script>
+            AlertHelper.show('docente', <?php echo json_encode($msg); ?>);
+        </script>
+    <?php endif; ?>
 
     <script>
         // Variables para el arrastre
@@ -693,6 +566,15 @@ require_once 'views/plantillas/navbar.php'; ?>
         // Cierra el modal
         function closeForm() {
             document.getElementById('formModal').classList.add('hidden');
+
+            // Vaciar el formulario con los datos del docente
+            document.getElementById('id_docente').value = '';
+            document.getElementById('nombre').value = '';
+            document.getElementById('apellidos').value = '';
+            document.getElementById('nie').value = '';
+            document.getElementById('seccion').value = 'A';
+            document.getElementById('usuario').value = '';
+            document.getElementById('rol').value = 'Docente';
         }
 
         // Función para alternar acordeón en vista móvil
