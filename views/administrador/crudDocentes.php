@@ -544,18 +544,47 @@ require_once 'views/plantillas/navbar.php'; ?>
 
 
         function openEditForm(data) {
-            document.getElementById('formModal').classList.remove('hidden');
-            document.getElementById('accion').value = 'editar';
-            document.getElementById('formTitle').textContent = 'Editar Docente';
+            console.log('Data recibida:', data);
 
-            // Llenar el formulario con los datos del docente
-            document.getElementById('id_docente').value = data.id;
-            document.getElementById('nombre').value = data.nombre;
-            document.getElementById('apellidos').value = data.apellidos;
-            document.getElementById('nie').value = data.nie;
-            document.getElementById('seccion').value = data.seccion;
-            document.getElementById('usuario').value = data.usuario;
-            document.getElementById('rol').value = data.rol;
+            // Verificar cada elemento UNO POR UNO
+            const elementos = {
+                formModal: document.getElementById('formModal'),
+                accion: document.getElementById('accion'),
+                formTitle: document.getElementById('formTitle'),
+                id_docente: document.getElementById('id_docente'),
+                nombre: document.getElementById('nombre'),
+                apellidos: document.getElementById('apellidos'),
+                nie: document.getElementById('nie'),
+                seccion: document.getElementById('seccion'),
+                usuario: document.getElementById('usuario'),
+                rol: document.getElementById('rol')
+            };
+
+            // Ver cuál es null
+            for (let key in elementos) {
+                if (!elementos[key]) {
+                    console.error(`❌ Falta el elemento: ${key}`);
+                } else {
+                    console.log(`✅ ${key} existe`);
+                }
+            }
+
+            // Si todos existen, continuar
+            if (Object.values(elementos).every(el => el !== null)) {
+                elementos.formModal.classList.remove('hidden');
+                elementos.accion.value = 'editar';
+                elementos.formTitle.textContent = 'Editar Docente';
+
+                elementos.id_docente.value = data.id;
+                elementos.nombre.value = data.nombre;
+                elementos.apellidos.value = data.apellidos;
+                elementos.nie.value = data.nie;
+                elementos.seccion.value = data.seccion;
+                elementos.usuario.value = data.usuario;
+                elementos.rol.value = data.rol;
+            } else {
+                console.error('⚠️ Faltan elementos en el formulario!');
+            }
         }
         // Abre el modal de eliminación y establece el ID del docente a eliminar
         function openDeleteForm(id) {

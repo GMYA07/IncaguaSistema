@@ -5,7 +5,7 @@
  <script src="https://cdn.jsdelivr.net/sweetalert2@11"></script>
 
  <!-- Tu archivo de alertas -->
- <script src="<?php echo BASE_URL; ?>public/js/alertas.js"></script>
+ <script src="<?php echo BASE_URL; ?>public/Assets/js/alertas.js"></script>
 
 
  </main>
