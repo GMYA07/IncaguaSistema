@@ -2,4 +2,4 @@
 
 
 # Ignorar toda la carpeta de configuración
-/config/config/
+.config/config.php
