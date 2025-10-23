@@ -198,6 +198,7 @@ require_once 'views/plantillas/navbar.php'; ?>
                     <!-- Formulario -->
                     <form id="docenteForm" action="<?php echo BASE_URL; ?>?pagina=agregarDocente" method="POST" class="space-y-6">
                         <input type="hidden" name="id_docente" id="id_docente">
+                        <input type="hidden" name="accion" id="accion" value="añadir">
 
                         <!-- Nombre -->
                         <div class="space-y-2">
