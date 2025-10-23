@@ -69,7 +69,7 @@ switch ($pagina) {
                 'seccion' => $_POST['seccion'],
                 'usuario' => $_POST['usuario'],
                 'contrasena' => $_POST['contrasena'],
-                'rol' => $_POST['rol']
+                'rol' => 'Docente'
             ];
             $controller->agregarDocente($dataDocente);
             break;

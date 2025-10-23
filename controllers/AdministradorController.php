@@ -1,15 +1,18 @@
 <?php
 require_once 'models/UsuarioModelo.php';
+require_once 'models/SeccionModelo.php';
 
 class AdministradorController
 {
     private $tablaUsuario = 'Usuario';
     private $tablaLogueo = 'Loggeo';
     private $modeloUsuario;
+    private $modeloSeccion;
 
     public function __construct()
     {
         $this->modeloUsuario = new UsuarioModelo();
+        $this->modeloSeccion = new SeccionModelo();
     }
 
     // Verificar que esté logueado (lo usamos en todos los métodos)
@@ -71,6 +74,7 @@ class AdministradorController
         $this->verificarSesion();
 
         $titulo = 'Docentes';
+        $secciones = $this->modeloSeccion->obtenerSecciones();
         $docentes  = $this->modeloUsuario->obtenerUsuariosDocentes();
 
         require_once 'views/administrador/crudDocentes.php';

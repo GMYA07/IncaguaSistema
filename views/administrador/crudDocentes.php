@@ -333,36 +333,6 @@ require_once 'views/plantillas/navbar.php'; ?>
                                 </svg>
                             </div>
                         </div>
-
-                        <!-- Rol -->
-                        <div class="space-y-2">
-                            <label class="block text-gray-700 font-semibold text-sm">
-                                <span id="rolDocente" class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-[#8B2F2F]" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                                    </svg>
-                                    Rol
-                                </span>
-                            </label>
-                            <div class="relative">
-                                <select name="rol" id="rol" required
-                                    class="w-full px-4 py-3 pl-10 bg-gradient-to-r from-gray-50 to-gray-100 border-2 
-                border-gray-200 rounded-xl focus:border-[#8B2F2F] focus:bg-white focus:outline-none appearance-none cursor-pointer font-medium transition-all duration-200">
-                                    <option value="Docente">👨‍🏫 Docente</option>
-                                    <option value="Administrador">👑 Administrador</option>
-                                </select>
-                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3.5 pointer-events-none" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                                <svg class="w-5 h-5 text-[#8B2F2F] absolute right-3 top-3.5 pointer-events-none" fill="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path d="M7 10l5 5 5-5z" />
-                                </svg>
-                            </div>
-                        </div>
-
                         <!-- Botones -->
                         <div class="flex gap-4 pt-4">
                             <button type="button" onclick="closeForm()"
