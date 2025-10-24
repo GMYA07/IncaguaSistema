@@ -46,7 +46,7 @@
             </a>
             <?php endif; ?>
 
-            <?php if ($_SESSION['rol'] === "Administrador"): ?>
+            <?php if ($_SESSION['rol'] === "Docente"): ?>
             <!-- Registrar Demeritos -->
             <a href="<?php echo BASE_URL; ?>?pagina=listarDemeritos_Docente"
                 class="group relative text-white px-6 py-4 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center gap-3 overflow-hidden">
