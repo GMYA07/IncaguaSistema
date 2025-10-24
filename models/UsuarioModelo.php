@@ -258,7 +258,22 @@ class UsuarioModelo
       $stmt->bindParam(':estado', $estado);
       $stmt->bindParam(':id_usuario', $id_usuario);
 
-      return $stmt->execute();
+      $stmt->execute();
+
+      // Si se está desactivando, desasignar las secciones de este docente
+      if ($estado == 0) {
+        $sql2 = 'UPDATE ' . $this->tablaSeccion . ' 
+                     SET id_usuario = NULL 
+                     WHERE id_usuario = :idUsuario';
+
+        $stmt2 = $this->conn->prepare($sql2);
+        $stmt2->bindParam(':idUsuario', $id_usuario);
+
+        return $stmt2->execute();
+      }
+
+      return true; // Retornar true si solo se cambió el estado
+
     } catch (PDOException $e) {
       error_log("Error al cambiar estado usuario: " . $e->getMessage());
       return false;
