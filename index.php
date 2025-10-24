@@ -66,7 +66,7 @@ switch ($pagina) {
                 'nombre_usuario' => $_POST['nombre'],
                 'apellido_usuario' => $_POST['apellidos'],
                 'nie_usuario' => $_POST['nie'],
-                'seccion' => $_POST['seccion'],
+                'id_grado' => $_POST['seccion'],
                 'usuario' => $_POST['usuario'],
                 'contrasena' => $_POST['contrasena'],
                 'rol' => 'Docente'
@@ -76,15 +76,47 @@ switch ($pagina) {
         }
 
         break;
-    
-    case 'eliminarDocente':
+
+    case 'editarDocente':
+        require_once 'controllers/AdministradorController.php';
+        $controller = new AdministradorController();
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $dataDocente = [
+                'id_usuario' => $_POST['id_docente'],
+                'nombre_usuario' => $_POST['nombre'],
+                'apellido_usuario' => $_POST['apellidos'],
+                'nie_usuario' => $_POST['nie'],
+                'id_grado' => !empty($_POST['seccion']) ? $_POST['seccion'] : null,
+                'usuario' => $_POST['usuario'],
+                'rol' => 'Docente'
+            ];
+
+            // Solo agregar contraseña si se proporcionó
+            if (!empty($_POST['contrasena'])) {
+                $dataDocente['contrasena'] = $_POST['contrasena'];
+            }
+            $controller->editarDocente($dataDocente);
+            break;
+        }
+
+        break;
+
+    case 'cambiarEstadoDocente':
 
         require_once 'controllers/AdministradorController.php';
         $controller = new AdministradorController();
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $id_DocenteEliminar = $_POST['id_docente'];
-            $controller->eliminarDocente($id_DocenteEliminar);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $id = $_POST['id_docente'];
+            $estadoActual = $_POST['estado_actual'];
+
+            // Cambiar al estado opuesto
+            $nuevoEstado = ($estadoActual == 1) ? 0 : 1;
+
+            $controller->cambiarEstadoDocente($id, $nuevoEstado);
             break;
         }
 

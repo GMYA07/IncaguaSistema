@@ -44,7 +44,7 @@ require_once 'views/plantillas/navbar.php'; ?>
                                     <!-- Sección (si la tienes en la BD) -->
                                     <div class="md:col-span-2 text-center">
                                         <small class="text-gray-500 block mb-1">Sección:</small>
-                                        <strong class="text-gray-800"><?php echo htmlspecialchars($docente['seccion'] ?? 'N/A'); ?></strong>
+                                        <strong class="text-gray-800"><?php echo !empty($docente['tipo_grado']) ? htmlspecialchars($docente['tipo_grado'] . ' ' . $docente['seccion_grado'] . ' - ' . $docente['especialidad_grado']) : 'Sin asignar'; ?></strong>
                                     </div>
 
                                     <!-- Usuario -->
@@ -53,11 +53,17 @@ require_once 'views/plantillas/navbar.php'; ?>
                                         <strong class="text-gray-800"><?php echo htmlspecialchars($docente['user']); ?></strong>
                                     </div>
 
-                                    <!-- Rol -->
+                                    <!-- Estado -->
                                     <div class="md:col-span-2 text-center">
-                                        <span class="inline-block px-4 py-2 bg-blue-500 text-white rounded-full font-semibold text-sm">
-                                            <i class="fas fa-chalkboard-teacher mr-1"></i><?php echo htmlspecialchars($docente['rol']); ?>
-                                        </span>
+                                        <?php if ($docente['estado_usuario'] == 1): ?>
+                                            <span class="inline-block px-4 py-2 bg-green-500 text-white rounded-full font-semibold text-sm">
+                                                <i class="fas fa-check-circle mr-1"></i>Activo
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="inline-block px-4 py-2 bg-red-500 text-white rounded-full font-semibold text-sm">
+                                                <i class="fas fa-times-circle mr-1"></i>Inactivo
+                                            </span>
+                                        <?php endif; ?>
                                     </div>
 
                                     <!-- Botones -->
@@ -69,18 +75,31 @@ require_once 'views/plantillas/navbar.php'; ?>
                                                                     "nombre" => $docente["nombre_usuario"],
                                                                     "apellidos" => $docente["apellido_usuario"],
                                                                     "nie" => $docente["nie_usuario"],
-                                                                    "seccion" => $docente["seccion"] ?? "A",
-                                                                    "usuario" => $docente["user"],
-                                                                    "rol" => $docente["rol"]
+                                                                    "seccion" => $docente["id_grado"] ?? "",
+                                                                    "seccionNombre" => !empty($docente['tipo_grado'])
+                                                                        ? $docente['tipo_grado'] . ' ' . $docente['seccion_grado'] . ' - ' . $docente['especialidad_grado']
+                                                                        : "",
+                                                                    "usuario" => $docente["user"]
                                                                 ]); ?>'
                                                 onclick="openEditForm(JSON.parse(this.dataset.docente))"
-                                                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
+                                                <?php echo $docente['estado_usuario'] == 0 ? 'disabled' : ''; ?>
+                                                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-all 
+                                                <?php echo $docente['estado_usuario'] == 0 ? 'opacity-50 cursor-not-allowed' : ''; ?>">
                                                 <i class="fas fa-edit mr-1"></i>Editar
                                             </button>
-                                            <button onclick="openDeleteForm(<?php echo $docente['id_usuario']; ?>)"
-                                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
-                                                <i class="fas fa-trash-alt mr-1"></i>Eliminar
-                                            </button>
+                                            <?php if ($docente['estado_usuario'] == 1): ?>
+                                                <!-- Botón para Desactivar -->
+                                                <button onclick="openDeleteForm(<?php echo $docente['id_usuario']; ?>, <?php echo $docente['estado_usuario']; ?>)"
+                                                    class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
+                                                    <i class="fas fa-user-slash mr-1"></i>Desactivar
+                                                </button>
+                                            <?php else: ?>
+                                                <!-- Botón para Activar -->
+                                                <button onclick="openDeleteForm(<?php echo $docente['id_usuario']; ?>, <?php echo $docente['estado_usuario']; ?>)"
+                                                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105">
+                                                    <i class="fas fa-user-check mr-1"></i>Activar
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +150,7 @@ require_once 'views/plantillas/navbar.php'; ?>
                                     <p><span class="font-semibold">Nombre:</span> <?php echo htmlspecialchars($docente['nombre_usuario']); ?></p>
                                     <p><span class="font-semibold">Apellidos:</span> <?php echo htmlspecialchars($docente['apellido_usuario']); ?></p>
                                     <p><span class="font-semibold">NIE:</span> <?php echo htmlspecialchars($docente['nie_usuario']); ?></p>
-                                    <p><span class="font-semibold">Sección:</span> <?php echo htmlspecialchars($docente['seccion'] ?? 'N/A'); ?></p>
+                                    <p><span class="font-semibold">Sección:</span> <?php echo !empty($docente['tipo_grado']) ? htmlspecialchars($docente['tipo_grado'] . ' ' . $docente['seccion_grado'] . ' - ' . $docente['especialidad_grado']) : 'Sin asignar'; ?></p>
                                     <p><span class="font-semibold">Usuario:</span> <?php echo htmlspecialchars($docente['user']); ?></p>
                                     <p><span class="font-semibold">Rol:</span> <span class="text-blue-600"><?php echo htmlspecialchars($docente['rol']); ?></span></p>
                                 </div>
@@ -142,19 +161,31 @@ require_once 'views/plantillas/navbar.php'; ?>
                                                             "nombre" => $docente["nombre_usuario"],
                                                             "apellidos" => $docente["apellido_usuario"],
                                                             "nie" => $docente["nie_usuario"],
-                                                            "seccion" => $docente["seccion"] ?? "A",
-                                                            "usuario" => $docente["user"],
-                                                            "rol" => $docente["rol"]
+                                                            "seccion" => $docente["id_grado"] ?? "",
+                                                            "seccionNombre" => !empty($docente['tipo_grado'])
+                                                                ? $docente['tipo_grado'] . ' ' . $docente['seccion_grado'] . ' - ' . $docente['especialidad_grado']
+                                                                : "",
+                                                            "usuario" => $docente["user"]
                                                         ]); ?>'
                                         onclick="openEditForm(JSON.parse(this.dataset.docente))"
-                                        class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm cursor-pointer">
-                                        Editar
+                                        <?php echo $docente['estado_usuario'] == 0 ? 'disabled' : ''; ?>
+                                        class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm 
+                                        <?php echo $docente['estado_usuario'] == 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'; ?>">
+                                        <i class="fas fa-edit mr-1"></i>Editar
                                     </button>
-                                    <button
-                                        onclick="openDeleteForm(<?php echo $docente['id_usuario']; ?>)"
-                                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm cursor-pointer">
-                                        Eliminar
-                                    </button>
+                                    <?php if ($docente['estado_usuario'] == 1): ?>
+                                        <!-- Botón para Desactivar -->
+                                        <button onclick="openDeleteForm(<?php echo $docente['id_usuario']; ?>, <?php echo $docente['estado_usuario']; ?>)"
+                                            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm cursor-pointer">
+                                            <i class="fas fa-user-slash mr-1"></i>Desactivar
+                                        </button>
+                                    <?php else: ?>
+                                        <!-- Botón para Activar -->
+                                        <button onclick="openDeleteForm(<?php echo $docente['id_usuario']; ?>, <?php echo $docente['estado_usuario']; ?>)"
+                                            class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition text-sm cursor-pointer">
+                                            <i class="fas fa-user-check mr-1"></i>Activar
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -270,12 +301,13 @@ require_once 'views/plantillas/navbar.php'; ?>
                                     </span>
                                 </label>
                                 <div class="relative">
-                                    <select name="seccion" id="seccion" required
+                                    <select name="seccion" id="seccion"
                                         class="w-full px-4 py-3 pl-10 bg-gradient-to-r from-gray-50 to-gray-100 border-2 
                 border-gray-200 rounded-xl focus:border-[#8B2F2F] focus:bg-white focus:outline-none appearance-none cursor-pointer font-medium transition-all duration-200">
-                                        <option value="A" selected>A</option>
-                                        <option value="B">B</option>
-                                        <option value="C">C</option>
+                                        <option value="" selected>Ninguno</option>
+                                        <?php foreach ($secciones as $seccion): ?>
+                                            <option value="<?= $seccion['id_grado'] ?>"><?= $seccion['tipo_grado'] . ' ' . $seccion['seccion_grado'] . ' - ' . $seccion['especialidad_grado'] ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3.5 pointer-events-none" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
@@ -369,29 +401,26 @@ require_once 'views/plantillas/navbar.php'; ?>
         <div id="deleteModal" class="hidden fixed inset-0 bg-opacity-60 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden animate-fadeIn">
 
-                <div class="flex items-center gap-3 px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-[#8B2F2F] to-[#6B1F1F]">
+                <!-- Header dinámico -->
+                <div id="modalHeader" class="flex items-center gap-3 px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-[#8B2F2F] to-[#6B1F1F]">
                     <div class="flex items-center justify-center w-10 h-10 rounded-full bg-white/20">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                     </div>
-                    <h2 class="text-lg font-semibold text-white">Eliminar alumno</h2>
+                    <h2 class="text-lg font-semibold text-white" id="tituloFormActivarDesactivar">Cambiar estado</h2>
                 </div>
 
                 <div class="p-6 text-center space-y-4">
-                    <p class="text-gray-700 text-sm">
-                        ¿Estás seguro de que deseas eliminar este alumno?
-                    </p>
-                    <p class="text-gray-500 text-sm">
-                        Esta acción <span class="font-semibold text-[#8B2F2F]">no se puede deshacer</span>.
-                        Todos los datos asociados serán eliminados permanentemente.
+                    <p class="text-gray-700 text-sm" id="preguntaFormActivarDesactivar">
+                        ¿Estás seguro de que deseas realizar esta acción?
                     </p>
                 </div>
 
-                <!-- Formulario de eliminación -->
-                <form id="deleteForm" method="POST" action="<?php echo BASE_URL; ?>?pagina=eliminarDocente">
-                    <input type="hidden" name="accion" value="eliminar">
+                <form id="deleteForm" method="POST" action="<?php echo BASE_URL; ?>?pagina=cambiarEstadoDocente">
+                    <input type="hidden" name="accion" value="cambiar_estado">
                     <input type="hidden" name="id_docente" id="delete_id_docente">
+                    <input type="hidden" name="estado_actual" id="delete_estado_docente">
 
                     <div class="flex gap-4 px-6 pb-6">
                         <button type="button" onclick="closeDeleteModal()"
@@ -402,12 +431,12 @@ require_once 'views/plantillas/navbar.php'; ?>
                             Cancelar
                         </button>
 
-                        <button type="submit"
+                        <button type="submit" id="botonSubmitModal"
                             class="flex-1 bg-gradient-to-r from-[#8B2F2F] to-[#6B1F1F] text-white py-3 rounded-xl font-semibold hover:from-[#6B1F1F] hover:to-[#5B0F0F] transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
-                            Eliminar
+                            Confirmar
                         </button>
                     </div>
                 </form>
@@ -518,18 +547,80 @@ require_once 'views/plantillas/navbar.php'; ?>
             document.getElementById('formModal').classList.remove('hidden');
             document.getElementById('accion').value = 'editar';
             document.getElementById('formTitle').textContent = 'Editar Docente';
+            document.getElementById('docenteForm').action = '<?php echo BASE_URL; ?>?pagina=editarDocente';
 
             document.getElementById('id_docente').value = data.id;
             document.getElementById('nombre').value = data.nombre;
             document.getElementById('apellidos').value = data.apellidos;
             document.getElementById('nie').value = data.nie;
-            document.getElementById('seccion').value = data.seccion;
             document.getElementById('usuario').value = data.usuario;
-            document.getElementById('rol').value = data.rol;
+
+            const selectSeccion = document.getElementById('seccion');
+
+            // Si tiene sección, agregarla temporalmente al select
+            if (data.seccion && data.seccionNombre) {
+                // Verificar si ya existe
+                let exists = false;
+                for (let option of selectSeccion.options) {
+                    if (option.value === data.seccion) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                // Si no existe, crearla
+                if (!exists) {
+                    const option = document.createElement('option');
+                    option.value = data.seccion;
+                    option.text = data.seccionNombre;
+                    selectSeccion.insertBefore(option, selectSeccion.options[1]);
+                }
+            }
+
+            selectSeccion.value = data.seccion || '';
+
+            const contrasenaInput = document.getElementById('contrasena');
+            contrasenaInput.removeAttribute('required');
+            contrasenaInput.value = '';
+            contrasenaInput.placeholder = 'Dejar vacío para no cambiar';
         }
         // Abre el modal de eliminación y establece el ID del docente a eliminar
-        function openDeleteForm(id) {
+        function openDeleteForm(id, estado) {
             document.getElementById('delete_id_docente').value = id;
+            document.getElementById('delete_estado_docente').value = estado;
+
+            const titulo = document.getElementById('tituloFormActivarDesactivar');
+            const pregunta = document.getElementById('preguntaFormActivarDesactivar');
+            const header = document.querySelector('#deleteModal .bg-gradient-to-r');
+            const botonSubmit = document.querySelector('#deleteForm button[type="submit"]');
+            const iconoSubmit = botonSubmit.querySelector('svg');
+
+            if (estado == 1) {
+                // Desactivar
+                titulo.textContent = 'Desactivar docente';
+                pregunta.textContent = '¿Estás seguro de que deseas desactivar este docente?';
+                header.className = 'flex items-center gap-3 px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-[#8B2F2F] to-[#6B1F1F]';
+                botonSubmit.className = 'flex-1 bg-gradient-to-r from-[#8B2F2F] to-[#6B1F1F] text-white py-3 rounded-xl font-semibold hover:from-[#6B1F1F] hover:to-[#5B0F0F] transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2';
+                botonSubmit.innerHTML = `
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+        </svg>
+        Desactivar
+    `;
+            } else {
+                // Activar
+                titulo.textContent = 'Activar docente';
+                pregunta.textContent = '¿Estás seguro de que deseas activar este docente?';
+                header.className = 'flex items-center gap-3 px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-[#8B2F2F] to-[#6B1F1F]';
+                botonSubmit.className = 'flex-1 bg-gradient-to-r from-[#8B2F2F] to-[#6B1F1F] text-white py-3 rounded-xl font-semibold hover:from-[#6B1F1F] hover:to-[#5B0F0F] transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2';
+                botonSubmit.innerHTML = `
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Activar
+    `;
+            }
+
             document.getElementById('deleteModal').classList.remove('hidden');
         }
 

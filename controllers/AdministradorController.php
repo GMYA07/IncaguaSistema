@@ -48,12 +48,24 @@ class AdministradorController
         exit();
     }
 
-    public function eliminarDocente($idDocente)
+    public function editarDocente($dataDocente){
+        $this->verificarSesion();
+
+        $titulo = 'Docentes';
+
+        $msg = $this->modeloUsuario->editarUsuario($dataDocente) ? 'actualizado' : 'error';
+
+        // Redirect a listar docentes con el mensaje
+        header('Location: ' . BASE_URL . '?pagina=listarDocentes&msg=' . $msg);
+        exit();
+    }
+
+    public function cambiarEstadoDocente($idDocente,$estadoActual)
     {
 
         $this->verificarSesion();
         $titulo = 'Docentes';
-        $msg = $this->modeloUsuario->cambiarEstadoUsuario($idDocente, 0) ? 'eliminado' : 'error';
+        $msg = $this->modeloUsuario->cambiarEstadoUsuario($idDocente, $estadoActual) ? 'cambiado' : 'error';
 
         // Redirect a listar docentes con el mensaje
         header('Location: ' . BASE_URL . '?pagina=listarDocentes&msg=' . $msg);
@@ -74,7 +86,7 @@ class AdministradorController
         $this->verificarSesion();
 
         $titulo = 'Docentes';
-        $secciones = $this->modeloSeccion->obtenerSecciones();
+        $secciones = $this->modeloSeccion->obtenerSeccionesDisponibles();
         $docentes  = $this->modeloUsuario->obtenerUsuariosDocentes();
 
         require_once 'views/administrador/crudDocentes.php';
