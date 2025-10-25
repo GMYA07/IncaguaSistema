@@ -17,7 +17,23 @@ require_once 'views/plantillas/navbar.php'; ?>
         <!-- Tabla para pantallas grandes -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="bg-gradient-to-r from-primary to-secondary text-white p-4">
-                <h5 class="text-xl font-semibold"><i class="fas fa-users mr-2"></i>Listado de Docentes</h5>
+                <div class="flex justify-between items-center">
+                    <h5 class="text-xl font-semibold">
+                        <i class="fas fa-users mr-2"></i>Listado de Docentes
+                    </h5>
+
+                    <!-- Filtro Select -->
+                    <div class="flex items-center gap-2">
+                        <label for="filtroEstado" class="text-sm font-medium">Filtrar:</label>
+                        <select id="filtroEstado"
+                            onchange="filtrarDocentes(this.value)"
+                            class="bg-white text-gray-800 px-4 py-2 rounded-lg font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 cursor-pointer transition-all hover:shadow-lg">
+                            <option value="todos">📋 Todos</option>
+                            <option value="activos">✅ Activos</option>
+                            <option value="inactivos">❌ Inactivos</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <div class="lg:block hidden overflow-auto h-[550px] p-6">
@@ -29,7 +45,8 @@ require_once 'views/plantillas/navbar.php'; ?>
                         </div>
                     <?php else: ?>
                         <?php foreach ($docentes as $docente): ?>
-                            <div class="bg-white rounded-lg p-6 mb-4 shadow-md hover:shadow-xl transition-all duration-300 hover:translate-x-2 border-l-4 border-accent">
+                            <div class="docente-item bg-white rounded-lg p-6 mb-4 shadow-md hover:shadow-xl transition-all duration-300 hover:translate-x-2 border-l-4 border-accent"
+                                data-estado="<?php echo $docente['estado_usuario'] == 1 ? 'activo' : 'inactivo'; ?>">
                                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                                     <!-- Nombre y NIE -->
                                     <div class="md:col-span-3">
@@ -110,88 +127,9 @@ require_once 'views/plantillas/navbar.php'; ?>
 
                 <div id="noResults" class="hidden text-center py-12 text-gray-500">
                     <i class="fas fa-search text-6xl mb-4"></i>
-                    <p class="text-lg">No se encontraron docentes que coincidan con la búsqueda</p>
+                    <p class="text-lg">No se encontraron docentes que coincidan con el filtro seleccionado</p>
                 </div>
             </div>
-        </div>
-
-        <!-- Vista móvil - Acordeón -->
-        <div class="block lg:hidden space-y-3 overflow-auto h-[550px] mt-6">
-            <?php if (empty($docentes)): ?>
-                <div class="text-center py-8">
-                    <p class="text-gray-500">No hay docentes registrados</p>
-                </div>
-            <?php else: ?>
-                <?php foreach ($docentes as $index => $docente): ?>
-                    <!-- Card docente -->
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                        <div class="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition border-l-4 border-accent"
-                            onclick="toggleAccordion('accordion<?php echo $index; ?>')">
-                            <div class="flex-1">
-                                <h3 class="font-semibold text-lg">
-                                    <?php echo htmlspecialchars($docente['nombre_usuario'] . ' ' . $docente['apellido_usuario']); ?>
-                                </h3>
-                                <p class="text-sm text-gray-600">
-                                    NIE: <?php echo htmlspecialchars($docente['nie_usuario']); ?> |
-                                    Sección: <?php echo htmlspecialchars($docente['seccion'] ?? 'N/A'); ?>
-                                </p>
-                                <span class="inline-block mt-1 px-2 py-1 text-xs <?php echo $docente['estado_usuario'] == 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'; ?> rounded">
-                                    <?php echo $docente['estado_usuario'] == 1 ? 'Activo' : 'Inactivo'; ?>
-                                </span>
-                            </div>
-                            <svg id="icon<?php echo $index; ?>" class="w-6 h-6 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </div>
-
-                        <div id="accordion<?php echo $index; ?>" class="hidden border-t border-gray-200">
-                            <div class="p-4 bg-gray-50">
-                                <div class="space-y-2 text-sm">
-                                    <p><span class="font-semibold">Nombre:</span> <?php echo htmlspecialchars($docente['nombre_usuario']); ?></p>
-                                    <p><span class="font-semibold">Apellidos:</span> <?php echo htmlspecialchars($docente['apellido_usuario']); ?></p>
-                                    <p><span class="font-semibold">NIE:</span> <?php echo htmlspecialchars($docente['nie_usuario']); ?></p>
-                                    <p><span class="font-semibold">Sección:</span> <?php echo !empty($docente['tipo_grado']) ? htmlspecialchars($docente['tipo_grado'] . ' ' . $docente['seccion_grado'] . ' - ' . $docente['especialidad_grado']) : 'Sin asignar'; ?></p>
-                                    <p><span class="font-semibold">Usuario:</span> <?php echo htmlspecialchars($docente['user']); ?></p>
-                                    <p><span class="font-semibold">Rol:</span> <span class="text-blue-600"><?php echo htmlspecialchars($docente['rol']); ?></span></p>
-                                </div>
-                                <div class="flex gap-2 mt-4">
-                                    <button
-                                        data-docente='<?php echo json_encode([
-                                                            "id" => $docente["id_usuario"],
-                                                            "nombre" => $docente["nombre_usuario"],
-                                                            "apellidos" => $docente["apellido_usuario"],
-                                                            "nie" => $docente["nie_usuario"],
-                                                            "seccion" => $docente["id_grado"] ?? "",
-                                                            "seccionNombre" => !empty($docente['tipo_grado'])
-                                                                ? $docente['tipo_grado'] . ' ' . $docente['seccion_grado'] . ' - ' . $docente['especialidad_grado']
-                                                                : "",
-                                                            "usuario" => $docente["user"]
-                                                        ]); ?>'
-                                        onclick="openEditForm(JSON.parse(this.dataset.docente))"
-                                        <?php echo $docente['estado_usuario'] == 0 ? 'disabled' : ''; ?>
-                                        class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm 
-                                        <?php echo $docente['estado_usuario'] == 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'; ?>">
-                                        <i class="fas fa-edit mr-1"></i>Editar
-                                    </button>
-                                    <?php if ($docente['estado_usuario'] == 1): ?>
-                                        <!-- Botón para Desactivar -->
-                                        <button onclick="openDeleteForm(<?php echo $docente['id_usuario']; ?>, <?php echo $docente['estado_usuario']; ?>)"
-                                            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm cursor-pointer">
-                                            <i class="fas fa-user-slash mr-1"></i>Desactivar
-                                        </button>
-                                    <?php else: ?>
-                                        <!-- Botón para Activar -->
-                                        <button onclick="openDeleteForm(<?php echo $docente['id_usuario']; ?>, <?php echo $docente['estado_usuario']; ?>)"
-                                            class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition text-sm cursor-pointer">
-                                            <i class="fas fa-user-check mr-1"></i>Activar
-                                        </button>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
         </div>
     </section>
 
@@ -680,7 +618,6 @@ require_once 'views/plantillas/navbar.php'; ?>
             }
         });
     </script>
-
 
 
     <?php require_once 'views/plantillas/footer.php'; ?>
