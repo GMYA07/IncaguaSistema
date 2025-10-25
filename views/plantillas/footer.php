@@ -6,6 +6,7 @@
 
  <!-- Tu archivo de alertas -->
  <script src="<?php echo BASE_URL; ?>public/Assets/js/alertas.js"></script>
+ <script src="<?php echo BASE_URL; ?>public/Assets/js/filtroDocente.js"></script>
 
 
  </main>
